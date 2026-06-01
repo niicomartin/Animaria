@@ -1,0 +1,32 @@
+ANIMARIA - VERSION CON MEJORAS VISUALES Y SISTEMA DE PEDIDOS
+
+Incluye:
+1. Home nuevo con diseño negro/blanco/amarillo.
+2. Catálogo de alimentos y accesorios conservando estilo de marca.
+3. Carrito con formulario de envío a domicilio.
+4. Pago en domicilio, sin MercadoPago.
+5. Al confirmar compra, el pedido queda guardado en el sistema.
+6. Panel Admin: /admin
+7. Pedidos y envíos Admin: /admin/pedidos
+8. Estados de pedido:
+   - PENDIENTE
+   - PREPARANDO
+   - EN_CAMINO
+   - ENTREGADO
+   - CANCELADO
+9. El usuario ve el historial y estado desde Mi cuenta.
+10. El admin puede cargar alimentos y accesorios desde el menú Admin.
+
+IMPORTANTE:
+- Para que el correo llegue, necesitás configurar un SMTP real en application.yml.
+- Gmail requiere contraseña de aplicación, no la clave normal.
+- Si el correo falla, el sistema guarda el link manual de validación en modo desarrollo.
+
+Para probar:
+1. Clean and Build.
+2. Run.
+3. Entrar a http://localhost:8080
+4. Crear usuario admin con forrajelahuella@hotmail.com.
+5. Cargar productos desde Admin.
+6. Crear usuario cliente, agregar productos al carrito y confirmar pedido.
+7. Entrar con admin a /admin/pedidos y cambiar estado del envío.

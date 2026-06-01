@@ -1,0 +1,22 @@
+CAMBIOS REALIZADOS EN ESTA VERSION
+
+1) Menu de alimentos reorganizado:
+   - Perros: Secos, Humedos, Golosinas, Todos
+   - Cachorros: Secos, Humedos, Golosinas, Todos
+   - Gatos: Secos, Humedos, Golosinas, Todos
+   - Pequenas mascotas: Todos
+
+2) Admin / carga de alimentos:
+   - El campo Cantidad ahora indica KG en mayusculas.
+   - La seleccion de categoria ahora incluye:
+     * Perros
+     * Cachorros
+     * Gatos
+     * Pequenas mascotas
+
+3) Catalogo de alimentos:
+   - Las tarjetas muestran KG en mayusculas.
+   - Las categorias se ven con nombres mas claros.
+   - El filtro de pequenas mascotas muestra todo junto en una sola seccion.
+
+Nota: se conservaron ADULTO y CACHORRO en el enum Animal para que no rompa productos viejos que ya existan en tu base de datos.

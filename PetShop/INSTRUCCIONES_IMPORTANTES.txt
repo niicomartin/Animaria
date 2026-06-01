@@ -1,0 +1,38 @@
+ANIMARIA - NOTAS IMPORTANTES
+
+1) ADMINISTRADOR
+El único usuario que queda como ADMIN es:
+forrajelahuella@hotmail.com
+
+Si querés cambiarlo, editá application.yml:
+app.admin.email
+
+o usá variable de entorno:
+ADMIN_EMAIL
+
+Cuando arranca el proyecto, se corrigen roles viejos:
+- ese email queda ADMIN, activo y verificado
+- los demás quedan GENERAL
+
+Después de cambiar el rol, cerrá sesión y volvé a iniciar sesión.
+
+2) CORREO DE VALIDACIÓN
+El registro acepta cualquier email como destinatario del usuario.
+Pero el remitente que envía correos debe estar configurado bien.
+
+Recomendado: Gmail con contraseña de aplicación.
+No uses contraseña normal.
+No uses Outlook/Hotmail como SMTP porque suele bloquear autenticación básica.
+
+En application.yml o variables de entorno:
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=tu_gmail@gmail.com
+MAIL_PASSWORD=contraseña_de_aplicacion_de_16_caracteres
+
+Si el correo no se puede enviar, el registro no se rompe.
+El usuario queda creado pendiente de validación y en la consola de NetBeans se imprime el link manual de validación.
+
+3) CARGAR PRODUCTOS
+Entrá con el email administrador.
+En el menú aparece Admin -> Cargar alimento / Cargar accesorio.

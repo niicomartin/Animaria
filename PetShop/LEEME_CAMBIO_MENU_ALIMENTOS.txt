@@ -1,0 +1,22 @@
+CAMBIO MENU ALIMENTOS
+
+Se corrigio la seccion Alimentos segun el pedido:
+
+- En el menu principal ahora solo aparecen:
+  * Perros
+  * Cachorros
+  * Gatos
+  * Pequeños animales
+
+- Al entrar a Perros, Cachorros o Gatos se abre una pagina de esa seccion con imagen principal y filtros:
+  * Todos
+  * Secos
+  * Humedos
+  * Golosinas
+
+- Al entrar a Pequeños animales se muestran directamente todos los productos de esa categoria, sin filtros internos.
+
+Archivos modificados:
+- src/main/resources/templates/plantillaBase/base.html
+- src/main/resources/templates/alimento.html
+- src/main/resources/static/catalogo.css

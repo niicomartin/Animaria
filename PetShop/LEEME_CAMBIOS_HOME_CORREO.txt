@@ -1,0 +1,29 @@
+Cambios aplicados:
+
+1. Home renovado con modelo negro/amarillo, sin marcas de productos.
+2. Reemplazados los dos cuadros finales por:
+   - Atención personalizada
+   - Entregas en Bahía Blanca
+   - Sección ¿Por qué elegir Animaria?
+3. Eliminado el cuadro público de ADMIN en la página inicial.
+4. Contacto actualizado a WhatsApp / teléfono: 2915650244.
+5. Registro actualizado:
+   - Nombre: placeholder "Tu nombre"
+   - Apellido: placeholder "Tu apellido"
+6. Login y recuperación:
+   - Ya no muestran links manuales de desarrollo al cliente.
+   - La validación por correo queda activa usando Gmail SMTP por variables de entorno.
+
+Variables necesarias en Render:
+SPRING_DATASOURCE_URL
+SPRING_DATASOURCE_USERNAME
+SPRING_DATASOURCE_PASSWORD
+MAIL_USERNAME
+MAIL_PASSWORD
+APP_URL
+ADMIN_EMAIL
+
+Para correo real:
+MAIL_USERNAME=animariaventas@gmail.com
+MAIL_PASSWORD=contraseña de aplicación de Google
+APP_URL=https://animaria.onrender.com

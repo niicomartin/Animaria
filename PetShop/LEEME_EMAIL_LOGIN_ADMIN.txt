@@ -1,0 +1,61 @@
+CAMBIOS NUEVOS - EMAIL, LOGIN Y ADMIN
+======================================
+
+1) CORREOS DE VALIDACION
+------------------------
+El sistema acepta clientes con cualquier correo: Gmail, Hotmail, Proton, Yahoo, etc.
+
+IMPORTANTE: el correo del cliente NO es el correo que envia.
+La tienda necesita un correo emisor SMTP configurado en application.yml o variables de entorno.
+
+Recomendado para local:
+MAIL_USERNAME=tu_gmail@gmail.com
+MAIL_PASSWORD=contraseña_de_aplicacion_de_gmail
+
+No uses la contraseña normal de Gmail. Tiene que ser contraseña de aplicación.
+
+Si el SMTP falla, el registro NO se rompe. En modo desarrollo aparece el link de validacion en pantalla y tambien en la consola de NetBeans.
+
+2) OLVIDE MI CLAVE
+------------------
+Ahora funciona con token:
+- El usuario pone su email.
+- El sistema genera un enlace de recuperacion.
+- Si el correo sale, llega por mail.
+- Si el correo no sale, en modo desarrollo muestra el link en pantalla.
+- El usuario abre el link y define una contraseña nueva.
+
+Rutas nuevas:
+/login/olvido
+/login/restablecer/{token}
+
+3) ADMIN
+--------
+El unico admin se define con:
+app.admin.email
+
+Por defecto:
+forrajelahuella@hotmail.com
+
+El sistema repara roles al iniciar:
+- Ese email queda ADMIN, activo y verificado.
+- Los demas quedan GENERAL.
+
+4) CARGA DE PRODUCTOS
+---------------------
+Se corrigieron los permisos de admin en controladores y vistas:
+hasRole('ADMIN')
+
+Ahora el menu Admin deberia permitir:
+- Cargar alimento
+- Cargar accesorio
+- Ver usuarios
+
+5) SI NO LLEGA EL MAIL
+----------------------
+Revisar:
+- Spam / correo no deseado
+- Que MAIL_USERNAME sea Gmail completo
+- Que MAIL_PASSWORD sea contraseña de aplicación
+- Que app.url sea http://localhost:8080 en local
+

@@ -1,0 +1,26 @@
+CAMBIOS DE ESTA VERSION
+
+1. Se recupero el inicio con imagenes reales del proyecto.
+   - Usa perrito.jpg, catdog.jpg y accesorios.jpg.
+   - Mantiene negro y amarillo como identidad visual.
+
+2. Se mejoro el panel administrador.
+   - Tarjetas de resumen.
+   - Acciones rapidas para cargar productos, ver pedidos y probar correo.
+   - Tabla de ultimos pedidos mas clara.
+
+3. Se mejoro Pedidos y envios.
+   - Datos de entrega separados por bloques.
+   - Actualizacion de estado mas visible.
+   - Nota interna para coordinar envio a domicilio.
+
+4. Se mejoro carga y edicion de productos.
+   - Formularios nuevos para alimentos y accesorios.
+   - Mejor organizacion de campos.
+   - Mejor carga de imagen.
+   - Botones directos para volver al panel o al catalogo.
+
+5. Se mantuvieron los colores negro, amarillo y blanco.
+
+IMPORTANTE
+Si algun correo no llega, revisar application.yml y usar Gmail con contraseña de aplicacion.

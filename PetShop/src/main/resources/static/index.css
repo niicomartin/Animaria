@@ -1,0 +1,47 @@
+body {
+    background-color: rgba(25, 22, 22, 0.935);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.animaria-header {
+    position: relative;
+    z-index: 9999;
+}
+
+.animaria-header .btn,
+.animaria-header a,
+.animaria-header button {
+    position: relative;
+    z-index: 10000;
+}
+
+.dropdown-menu {
+    z-index: 10001;
+}
+
+.animaria-carousel {
+    position: relative;
+    z-index: 1;
+}
+
+.banner-img {
+    height: 180px;
+    object-fit: cover;
+}
+
+.cuerpo {
+    background-color: rgb(30, 31, 31);
+}

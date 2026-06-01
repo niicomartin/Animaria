@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Crear cuenta | Animaria</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/registro.css">
+</head>
+<body style="background:#171717;">
+<header th:replace="plantillaBase/base :: head"></header>
+
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <div class="card border-0 shadow-lg overflow-hidden">
+                <div class="row g-0">
+
+                    <div class="col-lg-5 bg-dark text-white p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <span class="badge bg-warning text-dark mb-3">Nueva cuenta</span>
+                            <h1 class="display-6 fw-bold">Sumate a Animaria</h1>
+                            <p class="lead mt-3">
+                                Creá tu cuenta para comprar, guardar tus datos y consultar tu historial.
+                            </p>
+                        </div>
+
+                        <div class="mt-4">
+                            <img src="/HOLA.jpg" class="img-fluid rounded shadow" alt="Registro Animaria">
+                            <div class="alert alert-warning mt-4 mb-0">
+                                Después de registrarte te enviamos un correo para validar tu cuenta.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-7 bg-light p-4 p-md-5">
+                        <h2 class="fw-bold mb-1">Datos del cliente</h2>
+                        <p class="text-muted mb-4">Completá la información para poder preparar tus compras.</p>
+
+                        <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+                        <div th:if="${exito != null}" class="alert alert-success" th:text="${exito}"></div>
+
+                        <form th:action="@{/registro}" method="POST">
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Nombre</label>
+                                    <input type="text" name="nombre" class="form-control" placeholder="Tu nombre" th:value="${nombre}" required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Apellido</label>
+                                    <input type="text" name="apellido" class="form-control" placeholder="Tu apellido" th:value="${apellido}" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Celular</label>
+                                    <input type="number" name="celular" class="form-control" placeholder="Tu celular" th:value="${celular}" required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">E-mail</label>
+                                    <input type="email" name="email" class="form-control" placeholder="Tu e-mail" th:value="${email}" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Fecha de nacimiento</label>
+                                <input type="date" name="fechaNacimiento" class="form-control"
+                                       th:value="${fechaNacimiento != null ? #dates.format(fechaNacimiento, 'yyyy-MM-dd') : ''}" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Dirección</label>
+                                <input type="text" name="direccion" class="form-control" placeholder="Tu dirección" th:value="${direccion}" required>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-5 mb-3">
+                                    <label class="form-label">Localidad</label>
+                                    <input type="text" name="localidad" class="form-control" placeholder="Tu localidad" th:value="${localidad}" required>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Provincia</label>
+                                    <input type="text" name="provincia" class="form-control" placeholder="Tu provincia" th:value="${provincia}" required>
+                                </div>
+
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Código postal</label>
+                                    <input type="text" name="codigoPostal" class="form-control" placeholder="Código postal" th:value="${codigoPostal}">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Contraseña</label>
+                                    <input type="password" name="password" class="form-control" placeholder="Mínimo 6 caracteres" required>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">Repetir contraseña</label>
+                                    <input type="password" name="password2" class="form-control" placeholder="Repetí tu contraseña" required>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-warning btn-lg w-100 fw-bold" type="submit">
+                                Crear mi cuenta
+                            </button>
+                        </form>
+
+                        <div class="text-center mt-4">
+                            <span class="text-muted">¿Ya tenés cuenta?</span>
+                            <a th:href="@{/login}" class="fw-bold text-dark">Iniciar sesión</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

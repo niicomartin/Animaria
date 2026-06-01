@@ -1,0 +1,19 @@
+ANIMARIA PRO
+
+Cambios incluidos:
+- Home renovado conservando imágenes originales y colores negro/amarillo.
+- Panel admin mejorado con pedidos, estados, usuarios, productos y correo.
+- Centro de correos mejorado. Si no hay SMTP, no rompe la app: genera link manual y copia en target/email-debug.
+- Permisos: solo forrajelahuella@hotmail.com queda como ADMIN.
+- Registro y recuperación de contraseña con link por email o fallback manual.
+- Productos, pedidos y envíos mantienen flujo pago en domicilio.
+
+Correo real:
+- Usar Gmail como emisor con contraseña de aplicación.
+- Configurar en application.yml o variables:
+  MAIL_USERNAME=tu_gmail@gmail.com
+  MAIL_PASSWORD=clave_de_aplicacion
+
+Eliminar usuarios de prueba:
+- Opción segura: ejecutar LIMPIAR_USUARIOS_DE_PRUEBA.sql en MySQL.
+- Opción automática: poner LIMPIAR_USUARIOS=true una sola vez, iniciar el proyecto y volver a false.

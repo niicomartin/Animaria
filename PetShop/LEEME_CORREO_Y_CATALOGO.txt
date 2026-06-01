@@ -1,0 +1,31 @@
+CAMBIOS DE ESTA VERSION
+=======================
+
+1) Correo de validacion mejorado
+- Los clientes pueden registrarse con cualquier correo: Gmail, Hotmail, Proton, Yahoo, etc.
+- El correo REMITENTE de la aplicacion debe ser un SMTP valido.
+- Para Gmail se necesita una CONTRASENA DE APLICACION, no la clave normal.
+- Si el correo no sale, el registro no se rompe: queda creado y se muestra/genera el link manual en modo desarrollo.
+- Tambien se guarda una copia del correo en: target/email-debug
+- Como admin podes ir a /admin/email para probar envio SMTP.
+
+Variables recomendadas:
+MAIL_USERNAME=tu_gmail@gmail.com
+MAIL_PASSWORD=tu_contrasena_de_aplicacion
+APP_URL=http://localhost:8080
+MAIL_MODO_DESARROLLO=true
+MAIL_ENVIAR_REAL=true
+
+IMPORTANTE
+No existe envio 100% libre sin SMTP valido. Gmail, Brevo, SendGrid, Mailgun, etc. siempre requieren credenciales.
+Este proyecto queda preparado para no trabarse si el correo falla y para mostrar el link manual mientras estas desarrollando.
+
+2) Visual mejorado
+- alimento.html rediseñado
+- accesorio.html redisenado
+- nuevo CSS: static/catalogo.css
+- Se conserva identidad amarillo/negro de Animaria.
+
+3) Admin
+- Menu admin incluye Probar correo.
+- Rutas de carga/edicion/eliminacion siguen protegidas para rol ADMIN.

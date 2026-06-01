@@ -1,0 +1,63 @@
+ANIMARIA - PASOS PARA PUBLICAR EN RENDER
+========================================
+
+1) Subir este proyecto a GitHub.
+   La carpeta PetShop debe quedar dentro del repositorio.
+
+2) Crear una base de datos MySQL online.
+   Recomendado: Railway MySQL o un hosting MySQL.
+   Guardar:
+   - HOST
+   - PORT
+   - DATABASE
+   - USER
+   - PASSWORD
+
+3) Entrar a Render:
+   https://render.com
+
+4) Crear:
+   New -> Web Service
+
+5) Conectar el repositorio de GitHub.
+
+6) Si usás Docker:
+   - Runtime / Environment: Docker
+   - Root Directory: PetShop
+   Render detecta el Dockerfile.
+
+7) Variables de entorno obligatorias:
+
+SPRING_DATASOURCE_URL=jdbc:mysql://HOST:PUERTO/DATABASE?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+SPRING_DATASOURCE_USERNAME=USUARIO_DB
+SPRING_DATASOURCE_PASSWORD=CLAVE_DB
+MAIL_USERNAME=tu_gmail@gmail.com
+MAIL_PASSWORD=contraseña_de_aplicacion_gmail
+APP_URL=https://tu-servicio.onrender.com
+ADMIN_EMAIL=forrajelahuella@hotmail.com
+MAIL_MODO_DESARROLLO=false
+MAIL_ENVIAR_REAL=true
+JPA_DDL_AUTO=update
+THYMELEAF_CACHE=true
+
+8) Deploy.
+
+9) Cuando Render entregue la URL, copiarla y ponerla en APP_URL.
+   Ejemplo:
+   APP_URL=https://animaria.onrender.com
+
+10) Probar:
+   - Inicio
+   - Registro
+   - Confirmación por email
+   - Login
+   - Carga de productos como admin
+   - Carrito
+   - Pedido a domicilio
+   - Panel admin de pedidos
+
+NOTAS
+=====
+- Si el correo no llega, revisar spam y la variable MAIL_PASSWORD.
+- MAIL_PASSWORD debe ser contraseña de aplicación de Gmail, no clave normal.
+- Si el servicio no arranca, revisar logs de Render.

@@ -1,0 +1,66 @@
+ANIMARIA - VERSIÓN PREPARADA PARA PUBLICAR
+==========================================
+
+Este ZIP quedó preparado para trabajar en local y también para publicar en internet.
+
+QUÉ SE MODIFICÓ
+===============
+
+1) application.yml
+   - Ahora usa variables de entorno.
+   - En tu PC sigue funcionando con localhost, root/root y puerto 8080.
+   - En Render/Railway usa SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME y SPRING_DATASOURCE_PASSWORD.
+
+2) Dockerfile
+   - Permite publicar el proyecto como contenedor.
+   - Render puede usarlo directamente si elegís entorno Docker.
+
+3) render.yaml
+   - Archivo de blueprint para Render ubicado en la raíz del ZIP.
+   - Define el servicio web Animaria con rootDir PetShop.
+
+4) Correo
+   - Preparado para Gmail con contraseña de aplicación.
+   - Los clientes pueden registrarse con cualquier correo.
+   - El correo emisor tiene que estar en MAIL_USERNAME y MAIL_PASSWORD.
+
+5) Admin
+   - El email administrador sigue siendo forrajelahuella@hotmail.com.
+   - Todos los demás usuarios quedan GENERAL.
+   - Para limpiar usuarios de prueba, usar LIMPIAR_USUARIOS=true una vez o ejecutar el SQL incluido.
+
+ARCHIVOS IMPORTANTES
+====================
+
+- DEPLOY_RENDER_PASO_A_PASO.txt
+- ENV_RENDER_EJEMPLO.txt
+- LIMPIAR_USUARIOS_PRODUCCION.sql
+- Dockerfile
+- render.yaml
+
+VARIABLES PRINCIPALES
+=====================
+
+SPRING_DATASOURCE_URL
+SPRING_DATASOURCE_USERNAME
+SPRING_DATASOURCE_PASSWORD
+MAIL_USERNAME
+MAIL_PASSWORD
+APP_URL
+ADMIN_EMAIL
+MAIL_MODO_DESARROLLO
+MAIL_ENVIAR_REAL
+
+LOCAL
+=====
+
+Para usar en tu PC, no hace falta tocar nada si tenés:
+- MySQL local con base Petshop
+- usuario root
+- password root
+
+Internet / Producción
+=====================
+
+En producción cargá las variables desde el panel del hosting.
+No hardcodees claves en application.yml.

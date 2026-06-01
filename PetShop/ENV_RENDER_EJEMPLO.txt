@@ -1,0 +1,29 @@
+VARIABLES PARA RENDER / RAILWAY
+================================
+
+Estas variables NO se suben con valores reales. Se cargan en el panel del hosting.
+
+SPRING_DATASOURCE_URL=jdbc:mysql://HOST:PUERTO/NOMBRE_DB?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+SPRING_DATASOURCE_USERNAME=USUARIO_DB
+SPRING_DATASOURCE_PASSWORD=CLAVE_DB
+
+MAIL_USERNAME=tu_gmail@gmail.com
+MAIL_PASSWORD=contraseña_de_aplicacion_gmail
+
+APP_URL=https://tu-url.onrender.com
+ADMIN_EMAIL=forrajelahuella@hotmail.com
+
+MAIL_MODO_DESARROLLO=false
+MAIL_ENVIAR_REAL=true
+JPA_DDL_AUTO=update
+THYMELEAF_CACHE=true
+
+IMPORTANTE SOBRE GMAIL
+======================
+No uses tu contraseña normal de Gmail.
+Tenés que activar verificación en 2 pasos y crear una contraseña de aplicación.
+
+IMPORTANTE SOBRE BASE DE DATOS
+==============================
+La base online debe ser MySQL o compatible con MySQL.
+Si usás Railway MySQL, copiá HOST, PORT, DATABASE, USER y PASSWORD.

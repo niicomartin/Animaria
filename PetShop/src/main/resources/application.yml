@@ -1,0 +1,59 @@
+spring:
+  mail:
+    # SMTP de salida. Recomendado: Gmail con contraseña de aplicación.
+    # Los clientes pueden registrarse con cualquier correo: Gmail, Hotmail, Proton, Yahoo, etc.
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            required: true
+            enable: true
+          connectiontimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
+        debug: ${MAIL_DEBUG:false}
+
+  datasource:
+    # LOCAL por defecto. En Render/Railway se reemplaza con variables de entorno.
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/Petshop?allowPublicKeyRetrieval=true&useSSL=false&useTimezone=true&serverTimezone=GMT&characterEncoding=UTF-8}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    show-sql: ${JPA_SHOW_SQL:false}
+    open-in-view: false
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  thymeleaf:
+    cache: ${THYMELEAF_CACHE:false}
+
+server:
+  # Render/Railway inyectan PORT. Local usa 8080.
+  port: ${PORT:8080}
+  error:
+    whitelabel:
+      enabled: false
+
+app:
+  # En producción cambiar por la URL real, ejemplo: https://animaria.onrender.com
+  url: ${APP_URL:http://localhost:8080}
+  mail:
+    # En producción conviene false. En local true muestra links manuales si falla SMTP.
+    modo-desarrollo: ${MAIL_MODO_DESARROLLO:false}
+    # Si lo ponés false, no envía SMTP real y solo genera copia en target/email-debug.
+    enviar-real: ${MAIL_ENVIAR_REAL:true}
+  admin:
+    # Este es el único email que tendrá rol ADMIN.
+    email: ${ADMIN_EMAIL:forrajelahuella@hotmail.com}
+    # Para borrar usuarios de prueba y dejar solo admin, poner true una vez y luego volver a false.
+    limpiar-usuarios-al-iniciar: ${LIMPIAR_USUARIOS:false}

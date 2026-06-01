@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin | Animaria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+<header th:replace="plantillaBase/base :: head"></header>
+
+<main class="admin-page">
+    <section class="admin-hero">
+        <div class="container">
+            <span class="admin-kicker">Centro de control</span>
+            <h1>Panel administrativo</h1>
+            <p>Productos, pedidos, envíos, usuarios y correos, todo en una sola cabina de mando.</p>
+        </div>
+    </section>
+
+    <section class="container py-5">
+        <div class="admin-grid">
+            <div class="admin-stat"><span>Pedidos</span><strong th:text="${cantidadPedidos}">0</strong><small>Ventas registradas</small></div>
+            <div class="admin-stat"><span>Clientes</span><strong th:text="${cantidadUsuarios}">0</strong><small>Cuentas creadas</small></div>
+            <div class="admin-stat"><span>Alimentos</span><strong th:text="${cantidadAlimentos}">0</strong><small>Productos activos</small></div>
+            <div class="admin-stat"><span>Accesorios</span><strong th:text="${cantidadAccesorios}">0</strong><small>Productos activos</small></div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md"><div class="admin-stat"><span>Pendientes</span><strong th:text="${pendientes}">0</strong><small>Revisar hoy</small></div></div>
+            <div class="col-md"><div class="admin-stat"><span>Preparando</span><strong th:text="${preparando}">0</strong><small>Armar pedido</small></div></div>
+            <div class="col-md"><div class="admin-stat"><span>En camino</span><strong th:text="${camino}">0</strong><small>En reparto</small></div></div>
+            <div class="col-md"><div class="admin-stat"><span>Entregados</span><strong th:text="${entregados}">0</strong><small>Completados</small></div></div>
+        </div>
+
+        <div class="admin-topbar">
+            <div>
+                <h2 class="fw-bold mb-1">Acciones rápidas</h2>
+                <p class="text-muted mb-0">Carga productos, revisá ventas y coordiná entregas sin vueltas.</p>
+            </div>
+        </div>
+
+        <div class="admin-actions-panel">
+            <a th:href="@{/admin/pedidos}" class="admin-action-tile"><span class="icon">📦</span><div><b>Pedidos y envíos</b><span>Cambiar estado, ver domicilio y notas</span></div></a>
+            <a th:href="@{/alimento/crear}" class="admin-action-tile"><span class="icon">🍖</span><div><b>Cargar alimento</b><span>Alta rápida con imagen y stock</span></div></a>
+            <a th:href="@{/accesorio/crear}" class="admin-action-tile"><span class="icon">🦴</span><div><b>Cargar accesorio</b><span>Alta rápida para catálogo</span></div></a>
+            <a th:href="@{/admin/email}" class="admin-action-tile"><span class="icon">✉️</span><div><b>Centro de correos</b><span>Prueba SMTP y links manuales</span></div></a>
+            <a th:href="@{/lista}" class="admin-action-tile"><span class="icon">👥</span><div><b>Usuarios</b><span>Revisar cuentas registradas</span></div></a>
+        </div>
+
+        <div class="card admin-card">
+            <div class="card-body p-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <div>
+                        <h2 class="mb-1">Últimos pedidos</h2>
+                        <p class="text-muted mb-0">Vista rápida para preparar ventas y entregas.</p>
+                    </div>
+                    <a th:href="@{/admin/pedidos}" class="btn btn-warning text-dark fw-bold rounded-pill">Gestionar pedidos</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead><tr><th>Fecha</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Entrega</th></tr></thead>
+                        <tbody>
+                            <tr th:each="c : ${compras}">
+                                <td th:text="${#dates.format(c.fechaAlta, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+                                <td th:text="${c.usuario != null ? c.usuario.nombreCompleto : 'Cliente'}">Cliente</td>
+                                <td class="fw-bold" th:text="'$ ' + ${c.total}">$0</td>
+                                <td><span class="badge rounded-pill bg-warning text-dark" th:text="${c.estado}">Estado</span></td>
+                                <td th:text="${c.localidadEnvio} + ', ' + ${c.provinciaEnvio}">Entrega</td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(compras)}"><td colspan="5" class="text-center text-muted py-4">Todavía no hay pedidos.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

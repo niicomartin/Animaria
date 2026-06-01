@@ -1,0 +1,16 @@
+Registro actualizado:
+- Celular ahora es BIGINT.
+- Dirección se guarda en la columna histórica domicilio para evitar errores con bases viejas.
+- Se agregó un reparador automático de tabla: SchemaFixServicio.
+
+Si la base vieja sigue molestando, podés ejecutar manualmente:
+USE Petshop;
+ALTER TABLE usuario MODIFY celular BIGINT;
+ALTER TABLE usuario ADD COLUMN apellido VARCHAR(255);
+ALTER TABLE usuario ADD COLUMN fecha_nacimiento DATE;
+ALTER TABLE usuario ADD COLUMN localidad VARCHAR(255);
+ALTER TABLE usuario ADD COLUMN provincia VARCHAR(255);
+ALTER TABLE usuario ADD COLUMN codigo_postal VARCHAR(20);
+ALTER TABLE usuario ADD COLUMN activo BIT;
+ALTER TABLE usuario ADD COLUMN cuenta_verificada BIT;
+ALTER TABLE usuario ADD COLUMN token_verificacion VARCHAR(255);

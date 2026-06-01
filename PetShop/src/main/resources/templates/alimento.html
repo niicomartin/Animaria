@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="/catalogo.css">
+
+    <title>Alimentos | Animaria</title>
+</head>
+<body>
+
+<header th:replace="plantillaBase/base :: head"></header>
+
+<main class="catalogo-page">
+
+    <section class="food-category-hero"
+             th:classappend="${animalSeleccionado == null ? ' hero-todos' : (animalSeleccionado == 'PEQUENAS_MASCOTAS' ? ' hero-peques' : (animalSeleccionado == 'GATOS' ? ' hero-gatos' : ' hero-perros'))}">
+        <div class="container">
+            <div class="food-hero-card">
+                <div class="food-hero-copy">
+                    <span class="catalogo-kicker">Alimentos Animaria</span>
+
+                    <h1 th:switch="${animalSeleccionado}">
+                        <span th:case="'PERROS'">Alimentos para perros</span>
+                        <span th:case="'CACHORROS'">Alimentos para cachorros</span>
+                        <span th:case="'GATOS'">Alimentos para gatos</span>
+                        <span th:case="'PEQUENAS_MASCOTAS'">Pequeños animales</span>
+                        <span th:case="*">Alimentos para mascotas</span>
+                    </h1>
+
+                    <p th:switch="${animalSeleccionado}">
+                        <span th:case="'PERROS'">Todo para perros adultos: secos, húmedos, golosinas y opciones para todos los días.</span>
+                        <span th:case="'CACHORROS'">Opciones pensadas para cachorros, con productos ordenados para elegir más rápido.</span>
+                        <span th:case="'GATOS'">Alimentos para gatos con una vista clara, limpia y lista para comprar.</span>
+                        <span th:case="'PEQUENAS_MASCOTAS'">Conejos, hámsters, cobayos, aves, tortugas y otras mascotas pequeñas en una sola sección.</span>
+                        <span th:case="*">Elegí una categoría desde el menú para ver productos ordenados por mascota.</span>
+                    </p>
+
+                    <div class="food-tabs" th:if="${animalSeleccionado != null and animalSeleccionado != 'PEQUENAS_MASCOTAS'}">
+                        <a th:href="@{/alimento(animal=${animalSeleccionado})}"
+                           th:classappend="${tipoSeleccionado == null ? ' active' : ''}">
+                            Todos
+                        </a>
+                        <a th:href="@{/alimento(animal=${animalSeleccionado},tipo='SECO')}"
+                           th:classappend="${tipoSeleccionado == 'SECO' ? ' active' : ''}">
+                            Secos
+                        </a>
+                        <a th:href="@{/alimento(animal=${animalSeleccionado},tipo='HUMEDOS')}"
+                           th:classappend="${tipoSeleccionado == 'HUMEDOS' ? ' active' : ''}">
+                            Húmedos
+                        </a>
+                        <a th:href="@{/alimento(animal=${animalSeleccionado},tipo='GOLOSINAS')}"
+                           th:classappend="${tipoSeleccionado == 'GOLOSINAS' ? ' active' : ''}">
+                            Golosinas
+                        </a>
+                    </div>
+
+                    <div class="food-tabs" th:if="${animalSeleccionado == null}">
+                        <a th:href="@{/alimento(animal='PERROS')}">Perros</a>
+                        <a th:href="@{/alimento(animal='CACHORROS')}">Cachorros</a>
+                        <a th:href="@{/alimento(animal='GATOS')}">Gatos</a>
+                        <a th:href="@{/alimento(animal='PEQUENAS_MASCOTAS')}">Pequeños animales</a>
+                    </div>
+                </div>
+
+                <div class="food-hero-visual">
+                    <img th:if="${animalSeleccionado == 'GATOS'}" src="/gat.jpg" alt="Gatos">
+                    <img th:if="${animalSeleccionado == 'PEQUENAS_MASCOTAS'}" src="/RPEQUENAS--1024x292.jpg" alt="Pequeños animales">
+                    <img th:if="${animalSeleccionado != 'GATOS' and animalSeleccionado != 'PEQUENAS_MASCOTAS'}" src="/perrito.jpg" alt="Perros">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="catalogo-section py-5">
+        <div class="container">
+            <div class="catalogo-toolbar">
+                <div class="catalogo-heading-box">
+                    <h2 class="catalogo-title" th:switch="${animalSeleccionado}">
+                        <span th:case="'PERROS'">Productos para perros</span>
+                        <span th:case="'CACHORROS'">Productos para cachorros</span>
+                        <span th:case="'GATOS'">Productos para gatos</span>
+                        <span th:case="'PEQUENAS_MASCOTAS'">Productos para pequeños animales</span>
+                        <span th:case="*">Todos los alimentos</span>
+                    </h2>
+                    <p class="catalogo-subtitle" th:if="${animalSeleccionado != 'PEQUENAS_MASCOTAS'}">
+                        <span th:if="${tipoSeleccionado == null}">Mostrando todos los productos de esta sección.</span>
+                        <span th:if="${tipoSeleccionado == 'SECO'}">Mostrando alimentos secos.</span>
+                        <span th:if="${tipoSeleccionado == 'HUMEDOS'}">Mostrando alimentos húmedos.</span>
+                        <span th:if="${tipoSeleccionado == 'GOLOSINAS'}">Mostrando golosinas.</span>
+                    </p>
+                    <p class="catalogo-subtitle" th:if="${animalSeleccionado == 'PEQUENAS_MASCOTAS'}">
+                        Todos los productos juntos en una sola sección.
+                    </p>
+                </div>
+
+                <a th:href="@{/alimento/crear}" class="btn btn-warning text-dark fw-bold" sec:authorize="hasRole('ADMIN')">
+                    + Cargar alimento
+                </a>
+            </div>
+
+            <div th:if="${#lists.isEmpty(alimentos)}" class="alert catalogo-empty shadow-sm">
+                Todavía no hay productos cargados para esta sección.
+            </div>
+
+            <div class="catalogo-grid">
+                <article class="producto-card" th:each="alimento : ${alimentos}">
+                    <div class="producto-img-wrap">
+                        <img th:src="@{/imagen/alimento/{id}(id=${alimento.id})}" alt="Alimento" class="producto-img">
+                        <span class="producto-chip" th:switch="${alimento.animal != null ? alimento.animal.name() : ''}">
+                            <span th:case="'PERROS'">Perros</span>
+                            <span th:case="'CACHORROS'">Cachorros</span>
+                            <span th:case="'GATOS'">Gatos</span>
+                            <span th:case="'PEQUENAS_MASCOTAS'">Pequeños animales</span>
+                            <span th:case="*" th:text="${alimento.animal}">Categoría</span>
+                        </span>
+                    </div>
+
+                    <div class="producto-body">
+                        <div class="producto-meta" th:text="${alimento.tipoAlimento}">Tipo</div>
+
+                        <h3 th:if="${alimento.tipoAlimento.name() == 'GOLOSINAS'}"
+                            th:text="${alimento.marca} + ' · ' + ${alimento.cantidad} + ' Uni'">
+                            Producto
+                        </h3>
+
+                        <h3 th:unless="${alimento.tipoAlimento.name() == 'GOLOSINAS'}"
+                            th:text="${alimento.marca} + ' · ' + ${alimento.cantidad} + ' KG'">
+                            Producto
+                        </h3>
+
+                        <div class="producto-info">
+                            <span th:text="'Stock: ' + ${alimento.stock}">Stock</span>
+                            <strong th:text="'$ ' + ${alimento.precio}">$0</strong>
+                        </div>
+
+                        <div class="producto-actions">
+                            <a class="btn btn-warning text-dark fw-bold w-100"
+                               th:href="@{/Carrito/agregar-alimento/{id}(id=${alimento.id})}">
+                                Agregar al carrito
+                            </a>
+                        </div>
+
+                        <div class="admin-actions" sec:authorize="hasRole('ADMIN')">
+                            <a class="btn btn-outline-dark btn-sm"
+                               th:href="@{/alimento/editar/{id}(id=${alimento.id})}">
+                                Editar
+                            </a>
+                            <a class="btn btn-outline-danger btn-sm"
+                               th:href="@{/alimento/eliminar/{id}(id=${alimento.id})}">
+                                Eliminar
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

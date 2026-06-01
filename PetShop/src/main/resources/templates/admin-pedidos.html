@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos y envíos | Animaria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+<header th:replace="plantillaBase/base :: head"></header>
+
+<main class="admin-page">
+    <section class="admin-hero compact">
+        <div class="container">
+            <span class="admin-kicker">Ventas y logística</span>
+            <h1>Pedidos y envíos</h1>
+            <p>Controlá los pedidos que entran por la tienda, prepará la entrega y actualizá el estado para el cliente.</p>
+        </div>
+    </section>
+
+    <section class="container py-5">
+        <form th:action="@{/admin/pedidos}" method="GET" class="admin-filter mb-4">
+            <label>Estado</label>
+            <select name="estado" class="form-select">
+                <option value="">Todos los pedidos</option>
+                <option th:each="e : ${estados}" th:value="${e}" th:text="${e}" th:selected="${estadoSeleccionado == e}">Estado</option>
+            </select>
+            <button class="btn btn-warning text-dark fw-bold">Filtrar</button>
+            <a th:href="@{/admin}" class="btn btn-outline-dark">Volver al panel</a>
+        </form>
+
+        <div class="pedido-list">
+            <article class="pedido-card" th:each="c : ${compras}">
+                <div class="pedido-head">
+                    <div>
+                        <span class="pedido-id" th:text="'Pedido #' + ${#strings.substring(c.id,0,8)}">Pedido</span>
+                        <h2 th:text="${c.usuario != null ? c.usuario.nombreCompleto : 'Cliente'}">Cliente</h2>
+                        <p th:text="${#dates.format(c.fechaAlta, 'dd/MM/yyyy HH:mm')}">Fecha</p>
+                    </div>
+                    <div class="pedido-total">
+                        <span>Total</span>
+                        <strong th:text="'$ ' + ${c.total}">$0</strong>
+                    </div>
+                </div>
+
+                <div class="row g-3 pedido-data">
+                    <div class="col-md-3"><div class="data-box"><b>Estado</b><span th:text="${c.estado}">Estado</span></div></div>
+                    <div class="col-md-3"><div class="data-box"><b>Pago</b><span>En domicilio</span></div></div>
+                    <div class="col-md-3"><div class="data-box"><b>Teléfono</b><span th:text="${c.telefonoContacto}">Tel</span></div></div>
+                    <div class="col-md-3"><div class="data-box"><b>Localidad</b><span th:text="${c.localidadEnvio} + ', ' + ${c.provinciaEnvio}">Localidad</span></div></div>
+                    <div class="col-md-8"><div class="data-box"><b>Dirección de entrega</b><span th:text="${c.direccionEnvio}">Dirección</span></div></div>
+                    <div class="col-md-4"><div class="data-box"><b>Nota interna</b><span th:text="${c.notaAdmin != null ? c.notaAdmin : 'Sin nota'}">Nota</span></div></div>
+                    <div class="col-12" th:if="${c.observaciones != null and !#strings.isEmpty(c.observaciones)}"><div class="data-box"><b>Observaciones del cliente</b><span th:text="${c.observaciones}"></span></div></div>
+                </div>
+
+                <div class="pedido-productos">
+                    <span th:each="a : ${c.alimentos}" th:text="${a.marca}">Alimento</span>
+                    <span th:each="a : ${c.accesorios}" th:text="${a.nombre}">Accesorio</span>
+                </div>
+
+                <form th:action="@{/admin/pedidos/estado/{id}(id=${c.id})}" method="POST" class="pedido-form">
+                    <select name="estado" class="form-select">
+                        <option th:each="e : ${estados}" th:value="${e}" th:text="${e}" th:selected="${c.estado == e}">Estado</option>
+                    </select>
+                    <input type="text" name="notaAdmin" class="form-control" th:value="${c.notaAdmin}" placeholder="Ej: sale hoy 18 hs, pagó seña, llamar antes de enviar">
+                    <button class="btn btn-warning text-dark fw-bold">Actualizar pedido</button>
+                </form>
+            </article>
+
+            <div th:if="${#lists.isEmpty(compras)}" class="alert alert-dark rounded-4 text-center">
+                Todavía no hay pedidos para mostrar.
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

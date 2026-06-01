@@ -1,0 +1,46 @@
+CAMBIOS INCLUIDOS
+=================
+
+1) Login y registro corregidos.
+2) Validación real de cuenta por email:
+   - El primer usuario registrado queda como ADMIN y validado automáticamente.
+   - Los usuarios siguientes quedan como GENERAL y deben validar su cuenta desde el correo.
+3) Carrito funcional por sesión:
+   - Agregar alimentos.
+   - Agregar accesorios.
+   - Ver carrito.
+   - Eliminar productos.
+   - Vaciar carrito.
+   - Confirmar compra.
+4) Compras guardadas en base de datos.
+5) Página Mi cuenta con datos del usuario e historial de compras.
+6) Seguridad corregida: ya no está todo abierto con /**.
+
+IMPORTANTE PARA EL EMAIL
+========================
+En src/main/resources/application.yml quedaron estas variables:
+
+spring.mail.username: ${MAIL_USERNAME:}
+spring.mail.password: ${MAIL_PASSWORD:}
+
+Para que Gmail envíe correos reales, configurá variables de entorno:
+
+MAIL_USERNAME=tu_correo@gmail.com
+MAIL_PASSWORD=tu_contraseña_de_aplicacion
+APP_URL=http://localhost:8080
+
+NO uses tu contraseña normal de Gmail. Tenés que usar una contraseña de aplicación de Google.
+
+Si no configurás MAIL_USERNAME y MAIL_PASSWORD, el registro de clientes normales va a mostrar error porque no puede enviar el correo de validación.
+
+PRIMERA PRUEBA RECOMENDADA
+==========================
+1) Crear base de datos Petshop.
+2) Run del proyecto.
+3) Registrar el primer usuario: queda ADMIN automáticamente.
+4) Configurar Gmail.
+5) Registrar un segundo usuario: debe llegar email de validación.
+6) Validar desde el link.
+7) Iniciar sesión.
+8) Agregar productos al carrito.
+9) Confirmar compra.

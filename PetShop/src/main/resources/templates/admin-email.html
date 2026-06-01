@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Correos | Animaria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+<header th:replace="plantillaBase/base :: head"></header>
+
+<main class="admin-page email-center-page">
+    <section class="admin-hero compact email-hero">
+        <div class="container">
+            <span class="admin-kicker">Sistema de correos</span>
+            <h1>Centro de Correos Animaria</h1>
+            <p>Probá el envío real, revisá el último error y copiá links manuales de validación o recuperación si el SMTP no entrega.</p>
+        </div>
+    </section>
+
+    <section class="container py-5">
+        <div class="row g-4 align-items-stretch">
+            <div class="col-lg-7">
+                <div class="admin-card h-100">
+                    <div class="card-body p-4 p-lg-5">
+                        <div class="d-flex align-items-center gap-3 mb-4">
+                            <div class="mail-icon">✉️</div>
+                            <div>
+                                <h2 class="mb-1 fw-bold">Enviar correo de prueba</h2>
+                                <p class="text-muted mb-0">Usá un Gmail emisor con contraseña de aplicación para que salga real.</p>
+                            </div>
+                        </div>
+
+                        <div th:if="${error != null}" class="alert alert-danger rounded-4" th:text="${error}"></div>
+                        <div th:if="${exito != null}" class="alert alert-success rounded-4" th:text="${exito}"></div>
+
+                        <form th:action="@{/admin/email/probar}" method="POST" class="admin-form">
+                            <label class="form-label">Enviar prueba a</label>
+                            <div class="input-group input-group-lg mail-input-group">
+                                <input type="email" class="form-control" name="email" th:value="${email}" placeholder="cliente@gmail.com" required>
+                                <button class="btn btn-warning text-dark fw-bold" type="submit">Enviar</button>
+                            </div>
+                        </form>
+
+                        <div class="mail-help mt-4">
+                            <h3>Configuración recomendada</h3>
+                            <p>El cliente puede registrarse con cualquier correo. El correo que envía la app debe ser SMTP válido.</p>
+                            <div class="mail-config-box">
+                                <span>MAIL_USERNAME=tu_gmail@gmail.com</span>
+                                <span>MAIL_PASSWORD=contraseña_de_aplicación</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="debug-card h-100">
+                    <span class="debug-pill">Modo desarrollo</span>
+                    <h2>Si el correo no llega, igual podés probar.</h2>
+                    <p>Animaria guarda copia del mensaje en <strong>target/email-debug</strong> y muestra el último link generado.</p>
+
+                    <div class="debug-section" th:if="${ultimoError != null}">
+                        <b>Último error SMTP</b>
+                        <code th:text="${ultimoError}">Error</code>
+                    </div>
+
+                    <div class="debug-section" th:if="${ultimoLink != null}">
+                        <b>Último link generado</b>
+                        <code th:text="${ultimoLink}">Link</code>
+                    </div>
+
+                    <div class="debug-section" th:if="${ultimoError == null and ultimoLink == null}">
+                        <b>Sin actividad todavía</b>
+                        <code>Registrá un usuario o enviá un correo de prueba.</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
