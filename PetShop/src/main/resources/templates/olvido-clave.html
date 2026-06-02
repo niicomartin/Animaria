@@ -28,11 +28,6 @@
                 <div class="card-body p-4 p-md-5 bg-white">
                     <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
                     <div th:if="${exito != null}" class="alert alert-success" th:text="${exito}"></div>
-                    <div th:if="${linkRecuperacion != null}" class="alert alert-warning">
-                        Modo desarrollo: si el correo no llega, abrí este enlace:<br>
-                        <a class="dev-link" th:href="${linkRecuperacion}" th:text="${linkRecuperacion}"></a>
-                    </div>
-
                     <form th:action="@{/login/olvido}" method="POST">
                         <div class="mb-3">
                             <label class="form-label">Correo electrónico</label>

@@ -46,6 +46,16 @@
                         </div>
                         <button class="btn btn-warning w-100 fw-bold" type="submit">Guardar cambios</button>
                     </form>
+
+                    <hr class="my-4">
+
+                    <div class="border border-danger rounded-4 p-3 bg-light" th:if="${usuario.rol == null or usuario.rol.name() != 'ADMIN'}">
+                        <h3 class="h6 text-danger fw-bold mb-2">Eliminar cuenta</h3>
+                        <p class="small text-muted mb-3">Si ya no querés usar Animaria, podés eliminar tu cuenta. Esta acción cierra tu sesión y no se puede deshacer desde la web.</p>
+                        <form th:action="@{/mi-cuenta/eliminar}" method="POST" onsubmit="return confirm('¿Seguro que querés eliminar tu cuenta? Esta acción no se puede deshacer.');">
+                            <button class="btn btn-outline-danger w-100 fw-bold" type="submit">Eliminar mi cuenta</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

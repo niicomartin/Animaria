@@ -67,14 +67,12 @@ public class UsuarioServicio implements UserDetailsService {
 
         if (esEmailAdministrador(emailNormalizado)) {
             usuario.setRol(Rol.ADMIN);
-            usuario.setCuentaVerificada(true);
-            usuario.setTokenVerificacion(null);
-            return usuarioRepositorio.save(usuario);
+        } else {
+            usuario.setRol(Rol.GENERAL);
         }
 
-        // Registro simple para clientes: la cuenta queda habilitada inmediatamente.
-        // No dependemos del correo SMTP para que el cliente pueda iniciar sesión y comprar.
-        usuario.setRol(Rol.GENERAL);
+        // Registro libre: el usuario queda activo y habilitado para iniciar sesión al instante.
+        // No se exige validación por correo para comprar.
         usuario.setCuentaVerificada(true);
         usuario.setTokenVerificacion(null);
 
@@ -211,6 +209,26 @@ public class UsuarioServicio implements UserDetailsService {
         return usuarioRepositorio.save(usuario);
     }
 
+
+    @Transactional(rollbackFor = {Exception.class})
+    public Usuario eliminarCuenta(String id) throws Exception {
+        Usuario usuario = buscarPorId(id);
+
+        if (usuario.getRol() == Rol.ADMIN) {
+            throw new Exception("La cuenta administradora no se puede eliminar desde Mi cuenta");
+        }
+
+        usuario.setActivo(false);
+        usuario.setCuentaVerificada(false);
+        usuario.setTokenVerificacion(null);
+        usuario.setTokenRecuperacion(null);
+
+        // Liberamos el email para que la persona pueda registrarse nuevamente si lo necesita.
+        usuario.setEmail("eliminado_" + usuario.getId() + "_" + usuario.getEmail());
+
+        return usuarioRepositorio.save(usuario);
+    }
+
     @Transactional(readOnly = true)
     public List<Usuario> listar() {
         return usuarioRepositorio.findAll();
@@ -229,7 +247,15 @@ public class UsuarioServicio implements UserDetailsService {
             throw new UsernameNotFoundException("Usuario no encontrado");
         }
 
-        boolean activo = usuario.getActivo() != null && usuario.getActivo();
+        boolean activo = usuario.getActivo() == null || usuario.getActivo();
+
+        // Compatibilidad con usuarios antiguos: si quedó pendiente de verificación,
+        // se habilita automáticamente para no bloquear compras.
+        if (usuario.getCuentaVerificada() == null || !usuario.getCuentaVerificada()) {
+            usuario.setCuentaVerificada(true);
+            usuario.setTokenVerificacion(null);
+            usuarioRepositorio.save(usuario);
+        }
 
         List<GrantedAuthority> permisos = new ArrayList<>();
         permisos.add(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().toString()));

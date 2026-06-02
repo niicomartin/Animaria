@@ -19,12 +19,16 @@ public class PortalControlador {
     @GetMapping("/login")
     public String login(ModelMap modelo,
             @RequestParam(required = false) String error,
-            @RequestParam(required = false) String logout) {
+            @RequestParam(required = false) String logout,
+            @RequestParam(required = false) String cuentaEliminada) {
         if (error != null) {
-            modelo.put("error", "Email o contraseña incorrectos. Si recién te registraste, validá tu cuenta desde el correo.");
+            modelo.put("error", "Email o contraseña incorrectos.");
         }
         if (logout != null) {
             modelo.put("logout", "Has cerrado sesión correctamente");
+        }
+        if (cuentaEliminada != null) {
+            modelo.put("exito", "Tu cuenta fue eliminada correctamente");
         }
         return "login.html";
     }

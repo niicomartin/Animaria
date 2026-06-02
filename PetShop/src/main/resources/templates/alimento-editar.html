@@ -28,12 +28,24 @@
                         <div class="col-md-3"><label class="form-label">Cantidad (KG)</label><input type="number" name="cantidad" class="form-control" th:value="${alimento.cantidad}" min="1" required></div>
                         <div class="col-md-3"><label class="form-label">Stock</label><input type="number" name="stock" class="form-control" th:value="${alimento.stock}" min="0" required></div>
                         <div class="col-md-6"><label class="form-label">Tipo</label><select name="tipoAlimento" class="form-select"><option th:each="tipoAlimento : ${tipoAlimentos}" th:value="${tipoAlimento}" th:text="${tipoAlimento}" th:selected="${alimento.tipoAlimento == tipoAlimento}"></option></select></div>
-                        <div class="col-md-6"><label class="form-label">Categoría</label><select name="animal" class="form-select" required>
-                            <option value="PERROS" th:selected="${alimento.animal != null and alimento.animal.name() == 'PERROS'}">Perros</option>
-                            <option value="CACHORROS" th:selected="${alimento.animal != null and alimento.animal.name() == 'CACHORROS'}">Cachorros</option>
-                            <option value="GATOS" th:selected="${alimento.animal != null and alimento.animal.name() == 'GATOS'}">Gatos</option>
-                            <option value="PEQUENAS_MASCOTAS" th:selected="${alimento.animal != null and alimento.animal.name() == 'PEQUENAS_MASCOTAS'}">Pequeñas mascotas</option>
-                        </select></div>
+                        <div class="col-md-6">
+                            <label class="form-label">Categoría</label>
+                            <select id="categoriaProducto" class="form-select" required>
+                                <option value="PERROS" th:selected="${alimento.animal != null and (alimento.animal.name() == 'PERROS' or alimento.animal.name() == 'CACHORROS')}">Perros</option>
+                                <option value="GATOS" th:selected="${alimento.animal != null and alimento.animal.name() == 'GATOS'}">Gatos</option>
+                                <option value="PEQUENAS_MASCOTAS" th:selected="${alimento.animal != null and alimento.animal.name() == 'PEQUENAS_MASCOTAS'}">Pequeños animales</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6" id="grupoEtapaPerro" style="display:none;">
+                            <label class="form-label">Etapa</label>
+                            <select id="etapaPerro" class="form-select">
+                                <option value="PERROS" th:selected="${alimento.animal == null or alimento.animal.name() == 'PERROS'}">Adultos</option>
+                                <option value="CACHORROS" th:selected="${alimento.animal != null and alimento.animal.name() == 'CACHORROS'}">Cachorros</option>
+                            </select>
+                        </div>
+
+                        <input type="hidden" id="animalFinal" name="animal" th:value="${alimento.animal}" required>
                         <div class="col-md-6"><label class="form-label">Precio</label><input type="number" name="precio" class="form-control" th:value="${alimento.precio}" min="1" step="0.01" required></div>
                         <div class="col-md-6"><label class="form-label">Nueva imagen</label><input type="file" name="archivo" class="form-control" accept="image/*"><div class="upload-hint">Dejalo vacío para conservar la imagen actual.</div></div>
                         <input type="hidden" name="activo" value="true">
@@ -48,5 +60,30 @@
     </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+(function () {
+    const categoria = document.getElementById('categoriaProducto');
+    const etapaGrupo = document.getElementById('grupoEtapaPerro');
+    const etapa = document.getElementById('etapaPerro');
+    const animalFinal = document.getElementById('animalFinal');
+
+    function actualizarAnimalFinal() {
+        if (!categoria || !animalFinal) return;
+        if (categoria.value === 'PERROS') {
+            etapaGrupo.style.display = 'block';
+            animalFinal.value = etapa.value || 'PERROS';
+        } else {
+            etapaGrupo.style.display = 'none';
+            animalFinal.value = categoria.value;
+        }
+    }
+
+    if (categoria) categoria.addEventListener('change', actualizarAnimalFinal);
+    if (etapa) etapa.addEventListener('change', actualizarAnimalFinal);
+    actualizarAnimalFinal();
+})();
+</script>
+
 </body>
 </html>

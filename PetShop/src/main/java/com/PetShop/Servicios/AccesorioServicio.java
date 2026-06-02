@@ -92,10 +92,15 @@ public class AccesorioServicio {
 
     @Transactional(rollbackFor = {Exception.class})
     public Accesorio darBaja(Accesorio accesorio) throws Exception {
-        
         accesorio.setActivo(false);
-        return accesorio;
+        return accesorioRepositorio.save(accesorio);
+    }
 
+    @Transactional(rollbackFor = {Exception.class})
+    public Accesorio darBaja(String id) throws Exception {
+        Accesorio accesorio = buscarPorId(id);
+        accesorio.setActivo(false);
+        return accesorioRepositorio.save(accesorio);
     }
 
 }

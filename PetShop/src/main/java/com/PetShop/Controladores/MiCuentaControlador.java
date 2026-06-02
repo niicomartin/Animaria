@@ -64,4 +64,22 @@ public class MiCuentaControlador {
             return "mi-cuenta.html";
         }
     }
+
+    @PostMapping("/mi-cuenta/eliminar")
+    public String eliminarCuenta(ModelMap modelo, HttpSession session) {
+        try {
+            Usuario usuario = (Usuario) session.getAttribute("usuariosession");
+            usuarioServicio.eliminarCuenta(usuario.getId());
+            session.invalidate();
+            return "redirect:/login?cuentaEliminada=true";
+        } catch (Exception e) {
+            Usuario usuario = (Usuario) session.getAttribute("usuariosession");
+            List<Compra> compras = compraServicio.buscarPorUsuario(usuario);
+            modelo.put("usuario", usuario);
+            modelo.put("compras", compras);
+            modelo.put("error", e.getMessage());
+            return "mi-cuenta.html";
+        }
+    }
+
 }

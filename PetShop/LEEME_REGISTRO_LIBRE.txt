@@ -1,0 +1,15 @@
+Animaria - Registro libre sin validación de correo
+
+Cambios aplicados:
+- Se respeta la versión visual de Animaria-home-correo-final.
+- Se mantiene el teléfono 2915650244.
+- Se mantienen placeholders de registro: "Tu nombre" y "Tu apellido".
+- El registro ya no exige validación por correo.
+- Los usuarios nuevos quedan activos y verificados automáticamente.
+- Los usuarios existentes pendientes de verificación se habilitan automáticamente al iniciar.
+- El usuario administrador sigue siendo el email configurado en ADMIN_EMAIL/app.admin.email.
+
+Después de subir a GitHub:
+1) Render -> Manual Deploy -> Deploy latest commit.
+2) Registrar usuario nuevo.
+3) Iniciar sesión inmediatamente.

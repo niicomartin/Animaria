@@ -35,6 +35,7 @@ public class SchemaFixServicio {
         corregirTablaCompra();
 
         repararRoles();
+        habilitarUsuariosParaRegistroLibre();
         limpiarUsuariosSiFuePedido();
     }
 
@@ -54,14 +55,22 @@ public class SchemaFixServicio {
 
     private void repararRoles() {
         try {
-            // Todos los clientes quedan habilitados para comprar sin validación por correo.
-            jdbcTemplate.update("UPDATE usuario SET rol = 'GENERAL', activo = 1, cuenta_verificada = 1, token_verificacion = NULL WHERE LOWER(email) <> LOWER(?)", adminEmail);
+            jdbcTemplate.update("UPDATE usuario SET rol = 'GENERAL' WHERE LOWER(email) <> LOWER(?)", adminEmail);
         } catch (Exception e) {
             // No detenemos el arranque si la tabla todavía no existe.
         }
 
         try {
             jdbcTemplate.update("UPDATE usuario SET rol = 'ADMIN', activo = 1, cuenta_verificada = 1, token_verificacion = NULL WHERE LOWER(email) = LOWER(?)", adminEmail);
+        } catch (Exception e) {
+            // No detenemos el arranque si la tabla todavía no existe.
+        }
+    }
+
+    private void habilitarUsuariosParaRegistroLibre() {
+        try {
+            jdbcTemplate.update("UPDATE usuario SET activo = 1 WHERE activo IS NULL OR activo = 0");
+            jdbcTemplate.update("UPDATE usuario SET cuenta_verificada = 1, token_verificacion = NULL WHERE cuenta_verificada IS NULL OR cuenta_verificada = 0");
         } catch (Exception e) {
             // No detenemos el arranque si la tabla todavía no existe.
         }

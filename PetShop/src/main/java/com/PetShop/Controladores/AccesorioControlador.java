@@ -67,11 +67,8 @@ public class AccesorioControlador {
     }
 @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable String id, ModelMap modelo) throws Exception {
-        Accesorio accesorio = accesorioServicio.buscarPorId(id);
-        accesorioServicio.darBaja(accesorio);
-        modelo.put("accesorio", accesorio);
-
+    public String eliminar(@PathVariable String id) throws Exception {
+        accesorioServicio.darBaja(id);
         return "redirect:/accesorio";
     }
 }
