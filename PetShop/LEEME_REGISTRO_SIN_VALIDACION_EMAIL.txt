@@ -1,0 +1,11 @@
+Animaria - Registro sin validación por correo
+
+Cambios aplicados:
+- Los usuarios GENERAL quedan activos y verificados al registrarse.
+- Pueden iniciar sesión y comprar inmediatamente.
+- El administrador sigue siendo únicamente el email configurado en ADMIN_EMAIL.
+- Se quitó el aviso/link amarillo de validación manual del login.
+- Al iniciar, el sistema repara usuarios existentes para dejarlos activos/verificados.
+
+Motivo:
+Render no pudo conectar con smtp.gmail.com:587 por timeout, entonces el correo bloqueaba el uso normal de la tienda.

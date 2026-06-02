@@ -72,22 +72,13 @@ public class UsuarioServicio implements UserDetailsService {
             return usuarioRepositorio.save(usuario);
         }
 
+        // Registro simple para clientes: la cuenta queda habilitada inmediatamente.
+        // No dependemos del correo SMTP para que el cliente pueda iniciar sesión y comprar.
         usuario.setRol(Rol.GENERAL);
-        usuario.setCuentaVerificada(false);
-        usuario.setTokenVerificacion(UUID.randomUUID().toString());
+        usuario.setCuentaVerificada(true);
+        usuario.setTokenVerificacion(null);
 
-        usuarioRepositorio.save(usuario);
-
-        try {
-            emailServicio.enviarValidacionCuenta(usuario);
-        } catch (Exception e) {
-            // No dejamos que un problema SMTP rompa el registro ni haga rollback.
-            // La cuenta queda creada como GENERAL y pendiente de validación.
-            System.out.println("No se pudo enviar el correo de validación: " + e.getMessage());
-            System.out.println("Link manual de validación: " + emailServicio.generarLinkValidacion(usuario));
-        }
-
-        return usuario;
+        return usuarioRepositorio.save(usuario);
     }
 
     @Transactional(rollbackFor = {Exception.class})
@@ -239,18 +230,17 @@ public class UsuarioServicio implements UserDetailsService {
         }
 
         boolean activo = usuario.getActivo() != null && usuario.getActivo();
-        boolean verificado = usuario.getCuentaVerificada() != null && usuario.getCuentaVerificada();
 
         List<GrantedAuthority> permisos = new ArrayList<>();
         permisos.add(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().toString()));
 
-        if (activo && verificado) {
+        if (activo) {
             ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
             HttpSession session = attr.getRequest().getSession(true);
             session.setAttribute("usuariosession", usuario);
         }
 
-        return new User(usuario.getEmail(), usuario.getPassword(), activo, true, true, verificado, permisos);
+        return new User(usuario.getEmail(), usuario.getPassword(), activo, true, true, true, permisos);
     }
 
     private boolean esEmailAdministrador(String email) {

@@ -2,6 +2,7 @@ package com.PetShop.Controladores;
 
 import com.PetShop.Entidades.Usuario;
 import com.PetShop.Servicios.UsuarioServicio;
+import com.PetShop.Servicios.EmailServicio;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class UsuarioControlador {
     @Autowired
     private UsuarioServicio usuarioServicio;
 
+    @Autowired
+    private EmailServicio emailServicio;
+
     @PostMapping("/registro")
     public String registro(ModelMap modelo,
             @RequestParam String nombre,
@@ -37,10 +41,10 @@ public class UsuarioControlador {
             Usuario usuario = usuarioServicio.crear(nombre, apellido, celular, email, fechaNacimiento,
                     direccion, localidad, provincia, codigoPostal, password, password2);
 
-            if (usuario.getCuentaVerificada() != null && usuario.getCuentaVerificada()) {
+            if (usuario.getRol() != null && usuario.getRol().name().equals("ADMIN")) {
                 modelo.put("exito", "Usuario administrador creado correctamente. Ya podés iniciar sesión.");
             } else {
-                modelo.put("exito", "Registro exitoso. Te enviamos un correo para validar la cuenta. Revisá también spam/no deseado.");
+                modelo.put("exito", "Registro exitoso. Ya podés iniciar sesión y realizar tus compras.");
             }
             return "login.html";
         } catch (Exception e) {
@@ -79,6 +83,9 @@ public class UsuarioControlador {
         try {
             Usuario usuario = usuarioServicio.solicitarRecuperacionPassword(email);
             modelo.put("exito", "Te enviamos un correo para restablecer tu contraseña. Revisá spam/no deseado.");
+            if (emailServicio.getModoDesarrollo()) {
+                modelo.put("linkRecuperacion", emailServicio.generarLinkRecuperacion(usuario));
+            }
         } catch (Exception e) {
             modelo.put("error", e.getMessage());
             modelo.put("email", email);

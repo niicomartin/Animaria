@@ -54,7 +54,8 @@ public class SchemaFixServicio {
 
     private void repararRoles() {
         try {
-            jdbcTemplate.update("UPDATE usuario SET rol = 'GENERAL' WHERE LOWER(email) <> LOWER(?)", adminEmail);
+            // Todos los clientes quedan habilitados para comprar sin validación por correo.
+            jdbcTemplate.update("UPDATE usuario SET rol = 'GENERAL', activo = 1, cuenta_verificada = 1, token_verificacion = NULL WHERE LOWER(email) <> LOWER(?)", adminEmail);
         } catch (Exception e) {
             // No detenemos el arranque si la tabla todavía no existe.
         }

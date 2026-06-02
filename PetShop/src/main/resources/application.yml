@@ -49,7 +49,7 @@ app:
   url: ${APP_URL:http://localhost:8080}
   mail:
     # En producción conviene false. En local true muestra links manuales si falla SMTP.
-    modo-desarrollo: ${MAIL_MODO_DESARROLLO:false}
+    modo-desarrollo: ${MAIL_MODO_DESARROLLO:true}
     # Si lo ponés false, no envía SMTP real y solo genera copia en target/email-debug.
     enviar-real: ${MAIL_ENVIAR_REAL:true}
   admin:

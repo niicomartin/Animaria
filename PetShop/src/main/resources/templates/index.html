@@ -12,104 +12,105 @@
 <header th:replace="plantillaBase/base :: head"></header>
 
 <main class="home-page">
-
-    <section class="hero-store">
-        <div class="hero-overlay"></div>
-        <div class="container hero-content">
-            <div class="row align-items-center">
+    <section class="home-hero-pro">
+        <div class="hero-bg-paw"></div>
+        <div class="container">
+            <div class="row align-items-center g-5">
                 <div class="col-lg-6">
-                    <span class="pill-yellow">Animaria PetShop</span>
-                    <h1>Todo lo que tu mascota <span>necesita</span></h1>
-                    <p>
-                        Alimentos, accesorios y productos para perros, cachorros, gatos y pequeñas mascotas.
-                        Comprá online y coordiná la entrega a domicilio.
-                    </p>
-                    <div class="hero-actions">
-                        <a th:href="@{/alimento}" class="btn btn-warning text-dark fw-bold">🐾 Ver alimentos</a>
-                        <a th:href="@{/accesorio}" class="btn btn-outline-light fw-bold">Ver accesorios</a>
+                    <span class="home-kicker">Animaria PetShop</span>
+                    <h1>Comprá para tu mascota y pagá al recibir.</h1>
+                    <p class="hero-copy">Alimentos, accesorios y productos para mascotas con pedido online, seguimiento y envío a domicilio.</p>
+                    <div class="home-actions">
+                        <a th:href="@{/alimento}" class="btn btn-warning btn-lg text-dark fw-bold">Comprar alimentos</a>
+                        <a th:href="@{/accesorio}" class="btn btn-outline-light btn-lg">Ver accesorios</a>
+                    </div>
+                    <div class="hero-trust">
+                        <span>🚚 Envío a domicilio</span>
+                        <span>💳 Pago al recibir</span>
+                        <span>📦 Seguimiento del pedido</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="hero-visual-board">
+                        <img src="/perrito.jpg" class="hero-photo main" alt="Mascota Animaria">
+                        <img src="/catdog.jpg" class="hero-photo small top" alt="Perro y gato">
+                        <img src="/accesorios.jpg" class="hero-photo small bottom" alt="Accesorios">
+                        <div class="hero-ticket">
+                            <span>Nuevo pedido</span>
+                            <strong>Pago en domicilio</strong>
+                            <small>El admin recibe la venta y coordina entrega.</small>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="home-cards container">
-        <div class="info-card light-card">
-            <div class="info-icon">🤝</div>
-            <div class="info-text">
-                <span>Asesoramiento</span>
-                <h2>Atención personalizada</h2>
-                <p>
-                    Te ayudamos a elegir el alimento y accesorio adecuado para cada mascota según su edad,
-                    tamaño y necesidades.
-                </p>
-                <a th:href="@{/contacto}" class="btn btn-dark rounded-pill px-4">Consultar</a>
-            </div>
-            <img src="/perrito.jpg" alt="Atención personalizada Animaria">
-        </div>
-
-        <div class="info-card light-card delivery-card">
-            <div class="info-icon">🚚</div>
-            <div class="info-text">
-                <span>Entrega local</span>
-                <h2>Entregas en Bahía Blanca</h2>
-                <p>
-                    Realizamos entregas a domicilio y coordinamos cada pedido para que llegue en tiempo y forma.
-                    Pagás al recibir.
-                </p>
-                <a th:href="@{/Carrito/ver}" class="btn btn-dark rounded-pill px-4">Cómo comprar</a>
-            </div>
-            <div class="box-visual">
-                <span>ANIMARIA</span>
-                <small>Pedido a domicilio</small>
-            </div>
-        </div>
-    </section>
-
-    <section class="why-animaria">
+    <section class="home-benefits">
         <div class="container">
-            <h2>¿Por qué elegir Animaria?</h2>
-            <div class="why-grid">
-                <article>
-                    <div>🐾</div>
-                    <h3>Atención personalizada</h3>
-                    <p>Te asesoramos para que elijas lo mejor para tu mascota.</p>
-                </article>
-                <article>
-                    <div>🚚</div>
-                    <h3>Entrega a domicilio</h3>
-                    <p>Coordinamos envíos en Bahía Blanca y alrededores.</p>
-                </article>
-                <article>
-                    <div>🛒</div>
-                    <h3>Compra online simple</h3>
-                    <p>Elegí productos, cargá el carrito y enviá tu pedido.</p>
-                </article>
-                <article>
-                    <div>❤️</div>
-                    <h3>Compromiso real</h3>
-                    <p>Trabajamos con dedicación por el bienestar de tus mascotas.</p>
-                </article>
+            <div class="benefit-grid">
+                <div><b>🐶 Alimentos</b><span>Secos, húmedos y golosinas.</span></div>
+                <div><b>🦴 Accesorios</b><span>Juguetes, correas y más.</span></div>
+                <div><b>🛒 Carrito</b><span>Pedido rápido y claro.</span></div>
+                <div><b>📍 Domicilio</b><span>Entregas coordinadas.</span></div>
             </div>
         </div>
     </section>
 
-    <section class="home-categories-pro">
+    <section class="container home-categories py-5">
+        <div class="home-section-head">
+            <span class="section-pill">Categorías</span>
+            <h2>Una tienda simple, visual y lista para vender.</h2>
+            <p>Conservamos las imágenes originales de Animaria, pero ordenamos la experiencia para que el cliente compre más fácil.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <a th:href="@{/alimento}" class="category-card-pro">
+                    <img src="/alimentos.jpg" alt="Alimentos">
+                    <div><span>Alimentos</span><h3>Para cada etapa</h3><p>Adultos, cachorros, secos, húmedos y golosinas.</p></div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a th:href="@{/accesorio}" class="category-card-pro">
+                    <img src="/accesorios_para_perros.jpg" alt="Accesorios">
+                    <div><span>Accesorios</span><h3>Juego y paseo</h3><p>Productos para comodidad, paseo y entretenimiento.</p></div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a th:href="@{/Carrito/ver}" class="category-card-pro dark">
+                    <img src="/SERV2.png" alt="Envíos">
+                    <div><span>Pedidos</span><h3>Pago al recibir</h3><p>El admin coordina envío y cobro en domicilio.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="home-showcase-pro">
         <div class="container">
-            <div class="section-title">
-                <span class="pill-dark">Categorías</span>
-                <h2>Elegí qué necesita tu mascota</h2>
-            </div>
-            <div class="category-strip">
-                <a th:href="@{/alimento(animal='PERROS')}" class="cat-pill">🐶 Perros</a>
-                <a th:href="@{/alimento(animal='CACHORROS')}" class="cat-pill">🐕 Cachorros</a>
-                <a th:href="@{/alimento(animal='GATOS')}" class="cat-pill">🐱 Gatos</a>
-                <a th:href="@{/alimento(animal='PEQUENAS_MASCOTAS')}" class="cat-pill">🐹 Pequeñas mascotas</a>
-                <a th:href="@{/accesorio}" class="cat-pill">🦴 Accesorios</a>
+            <div class="row g-4 align-items-stretch">
+                <div class="col-lg-7">
+                    <div class="promo-card image-card">
+                        <img src="/RPEQUENAS--1024x292.jpg" alt="Pequeñas mascotas">
+                        <div>
+                            <span class="section-pill yellow">Animaria</span>
+                            <h2>Más que perros y gatos.</h2>
+                            <p>También podés vender productos para aves, conejos, hámsters, tortugas y pequeñas mascotas.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="promo-card black-card">
+                        <span class="section-pill yellow">Admin</span>
+                        <h2>Pedidos, productos y envíos.</h2>
+                        <p>Tu panel permite cargar productos, ver pedidos y cambiar estados de entrega.</p>
+                        <a th:href="@{/admin}" class="btn btn-warning text-dark fw-bold rounded-pill">Abrir panel</a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
-
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
