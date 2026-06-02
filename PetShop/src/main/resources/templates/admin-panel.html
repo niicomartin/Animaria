@@ -67,8 +67,8 @@
                                 <td th:text="${#dates.format(c.fechaAlta, 'dd/MM/yyyy HH:mm')}">Fecha</td>
                                 <td th:text="${c.usuario != null ? c.usuario.nombreCompleto : 'Cliente'}">Cliente</td>
                                 <td class="fw-bold" th:text="'$ ' + ${c.total}">$0</td>
-                                <td><span class="badge rounded-pill bg-warning text-dark" th:text="${c.estado}">Estado</span></td>
-                                <td th:text="${c.localidadEnvio} + ', ' + ${c.provinciaEnvio}">Entrega</td>
+                                <td><span class="badge rounded-pill bg-warning text-dark" th:text="${c.estado != null ? c.estado : 'PENDIENTE'}">Estado</span></td>
+                                <td th:text="${(c.localidadEnvio != null ? c.localidadEnvio : 'Sin localidad') + ', ' + (c.provinciaEnvio != null ? c.provinciaEnvio : 'Sin provincia')}">Entrega</td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(compras)}"><td colspan="5" class="text-center text-muted py-4">Todavía no hay pedidos.</td></tr>
                         </tbody>

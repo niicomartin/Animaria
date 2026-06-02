@@ -62,18 +62,28 @@ public class CompraServicio {
 
     @Transactional(readOnly = true)
     public List<Compra> buscarActivas() {
-        return compraRepositorio.buscarActivas();
+        List<Compra> compras = compraRepositorio.buscarActivas();
+        prepararComprasParaVista(compras);
+        return compras;
     }
 
     @Transactional(readOnly = true)
     public List<Compra> buscarPorEstado(EstadoCompra estado) {
-        if (estado == null) return buscarActivas();
-        return compraRepositorio.findByEstadoOrderByFechaAltaDesc(estado);
+        List<Compra> compras;
+        if (estado == null) {
+            compras = compraRepositorio.buscarActivas();
+        } else {
+            compras = compraRepositorio.findByEstadoOrderByFechaAltaDesc(estado);
+        }
+        prepararComprasParaVista(compras);
+        return compras;
     }
 
     @Transactional(readOnly = true)
     public List<Compra> buscarPorUsuario(Usuario usuario) {
-        return compraRepositorio.findByUsuarioOrderByFechaAltaDesc(usuario);
+        List<Compra> compras = compraRepositorio.findByUsuarioOrderByFechaAltaDesc(usuario);
+        prepararComprasParaVista(compras);
+        return compras;
     }
 
     @Transactional(readOnly = true)
@@ -103,6 +113,33 @@ public class CompraServicio {
         compra.setAlta(false);
         compra.setEstado(EstadoCompra.CANCELADO);
         compraRepositorio.save(compra);
+    }
+
+    private void prepararComprasParaVista(List<Compra> compras) {
+        if (compras == null) {
+            return;
+        }
+
+        for (Compra compra : compras) {
+            if (compra.getEstado() == null) {
+                compra.setEstado(EstadoCompra.PENDIENTE);
+            }
+            if (compra.getMetodoPago() == null || compra.getMetodoPago().trim().isEmpty()) {
+                compra.setMetodoPago("PAGO_EN_DOMICILIO");
+            }
+            if (compra.getNotaAdmin() == null || compra.getNotaAdmin().trim().isEmpty()) {
+                compra.setNotaAdmin("Pedido recibido. Revisar y coordinar entrega.");
+            }
+
+            // Inicializa las listas dentro de la transacción para evitar error 500
+            // por LazyInitializationException en la vista de pedidos/envíos.
+            if (compra.getAlimentos() != null) {
+                compra.getAlimentos().size();
+            }
+            if (compra.getAccesorios() != null) {
+                compra.getAccesorios().size();
+            }
+        }
     }
 
     public void validarCarrito(List<Alimento> alimentos, List<Accesorio> accesorios, Usuario usuario) throws Exception {

@@ -35,7 +35,7 @@
             <article class="pedido-card" th:each="c : ${compras}">
                 <div class="pedido-head">
                     <div>
-                        <span class="pedido-id" th:text="'Pedido #' + ${#strings.substring(c.id,0,8)}">Pedido</span>
+                        <span class="pedido-id" th:text="'Pedido #' + ${c.id != null ? #strings.substring(c.id,0,8) : 'sin-id'}">Pedido</span>
                         <h2 th:text="${c.usuario != null ? c.usuario.nombreCompleto : 'Cliente'}">Cliente</h2>
                         <p th:text="${#dates.format(c.fechaAlta, 'dd/MM/yyyy HH:mm')}">Fecha</p>
                     </div>
@@ -46,11 +46,11 @@
                 </div>
 
                 <div class="row g-3 pedido-data">
-                    <div class="col-md-3"><div class="data-box"><b>Estado</b><span th:text="${c.estado}">Estado</span></div></div>
+                    <div class="col-md-3"><div class="data-box"><b>Estado</b><span th:text="${c.estado != null ? c.estado : 'PENDIENTE'}">Estado</span></div></div>
                     <div class="col-md-3"><div class="data-box"><b>Pago</b><span>En domicilio</span></div></div>
-                    <div class="col-md-3"><div class="data-box"><b>Teléfono</b><span th:text="${c.telefonoContacto}">Tel</span></div></div>
-                    <div class="col-md-3"><div class="data-box"><b>Localidad</b><span th:text="${c.localidadEnvio} + ', ' + ${c.provinciaEnvio}">Localidad</span></div></div>
-                    <div class="col-md-8"><div class="data-box"><b>Dirección de entrega</b><span th:text="${c.direccionEnvio}">Dirección</span></div></div>
+                    <div class="col-md-3"><div class="data-box"><b>Teléfono</b><span th:text="${c.telefonoContacto != null ? c.telefonoContacto : 'Sin teléfono'}">Tel</span></div></div>
+                    <div class="col-md-3"><div class="data-box"><b>Localidad</b><span th:text="${(c.localidadEnvio != null ? c.localidadEnvio : 'Sin localidad') + ', ' + (c.provinciaEnvio != null ? c.provinciaEnvio : 'Sin provincia')}">Localidad</span></div></div>
+                    <div class="col-md-8"><div class="data-box"><b>Dirección de entrega</b><span th:text="${c.direccionEnvio != null ? c.direccionEnvio : 'Sin dirección cargada'}">Dirección</span></div></div>
                     <div class="col-md-4"><div class="data-box"><b>Nota interna</b><span th:text="${c.notaAdmin != null ? c.notaAdmin : 'Sin nota'}">Nota</span></div></div>
                     <div class="col-12" th:if="${c.observaciones != null and !#strings.isEmpty(c.observaciones)}"><div class="data-box"><b>Observaciones del cliente</b><span th:text="${c.observaciones}"></span></div></div>
                 </div>
