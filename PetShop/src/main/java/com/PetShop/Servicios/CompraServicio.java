@@ -5,9 +5,14 @@ import com.PetShop.Entidades.Alimento;
 import com.PetShop.Entidades.Compra;
 import com.PetShop.Entidades.EstadoCompra;
 import com.PetShop.Entidades.Usuario;
+import com.PetShop.Repositorios.AccesorioRepositorio;
+import com.PetShop.Repositorios.AlimentoRepositorio;
 import com.PetShop.Repositorios.CompraRepositorio;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +24,12 @@ public class CompraServicio {
     @Autowired
     private CompraRepositorio compraRepositorio;
 
+    @Autowired
+    private AlimentoRepositorio alimentoRepositorio;
+
+    @Autowired
+    private AccesorioRepositorio accesorioRepositorio;
+
     @Transactional(rollbackFor = {Exception.class})
     public Compra crearCompra(List<Alimento> alimentos, List<Accesorio> accesorios, Usuario usuario,
             String direccionEnvio, String localidadEnvio, String provinciaEnvio, String codigoPostalEnvio,
@@ -27,11 +38,16 @@ public class CompraServicio {
         validarCarrito(alimentos, accesorios, usuario);
         validarEnvio(direccionEnvio, localidadEnvio, provinciaEnvio, telefonoContacto);
 
-        double total = calcularTotal(alimentos, accesorios);
+        // Se vuelve a buscar cada producto desde la base, valida stock real y descuenta.
+        // Si algo falla, toda la compra se cancela por la transacción y no descuenta nada.
+        List<Alimento> alimentosConfirmados = descontarStockAlimentos(alimentos);
+        List<Accesorio> accesoriosConfirmados = descontarStockAccesorios(accesorios);
+
+        double total = calcularTotal(alimentosConfirmados, accesoriosConfirmados);
 
         Compra compra = new Compra();
-        compra.setAlimentos(alimentos);
-        compra.setAccesorios(accesorios);
+        compra.setAlimentos(alimentosConfirmados);
+        compra.setAccesorios(accesoriosConfirmados);
         compra.setUsuario(usuario);
         compra.setValorCompra(total);
         compra.setTotal(total);
@@ -40,7 +56,7 @@ public class CompraServicio {
         compra.setEstado(EstadoCompra.PENDIENTE);
         compra.setMetodoPago("PAGO_EN_DOMICILIO");
         compra.setDireccionEnvio(direccionEnvio);
-        compra.setLocalidadEnvio(localidadEnvio);
+        compra.setLocalidadEnvio(localalidadSinNulo(localidadEnvio));
         compra.setProvinciaEnvio(provinciaEnvio);
         compra.setCodigoPostalEnvio(codigoPostalEnvio);
         compra.setTelefonoContacto(telefonoContacto);
@@ -110,9 +126,152 @@ public class CompraServicio {
     @Transactional(rollbackFor = {Exception.class})
     public void eliminar(String id) throws Exception {
         Compra compra = buscarPorId(id);
+
+        // Si el administrador cancela/elimina un pedido activo, se repone el stock.
+        if (compra.getAlta() != null && compra.getAlta()) {
+            reponerStockAlimentos(compra.getAlimentos());
+            reponerStockAccesorios(compra.getAccesorios());
+        }
+
         compra.setAlta(false);
         compra.setEstado(EstadoCompra.CANCELADO);
         compraRepositorio.save(compra);
+    }
+
+    private List<Alimento> descontarStockAlimentos(List<Alimento> alimentos) throws Exception {
+        List<Alimento> alimentosConfirmados = new ArrayList<>();
+
+        if (alimentos == null || alimentos.isEmpty()) {
+            return alimentosConfirmados;
+        }
+
+        Map<String, Integer> cantidadesPorProducto = new LinkedHashMap<>();
+
+        for (Alimento item : alimentos) {
+            if (item == null || item.getId() == null) {
+                continue;
+            }
+            Integer cantidadActual = cantidadesPorProducto.get(item.getId());
+            cantidadesPorProducto.put(item.getId(), cantidadActual == null ? 1 : cantidadActual + 1);
+        }
+
+        for (Map.Entry<String, Integer> entrada : cantidadesPorProducto.entrySet()) {
+            Alimento alimento = alimentoRepositorio.findById(entrada.getKey())
+                    .orElseThrow(() -> new Exception("Uno de los alimentos del carrito ya no existe"));
+
+            int cantidadComprada = entrada.getValue();
+            int stockActual = alimento.getStock() == null ? 0 : alimento.getStock();
+
+            if (!alimento.isActivo()) {
+                throw new Exception("El producto " + alimento.getMarca() + " ya no está disponible");
+            }
+
+            if (stockActual < cantidadComprada) {
+                throw new Exception("Stock insuficiente para " + alimento.getMarca()
+                        + ". Disponible: " + stockActual + ". Solicitado: " + cantidadComprada);
+            }
+
+            alimento.setStock(stockActual - cantidadComprada);
+            alimentoRepositorio.save(alimento);
+
+            for (int i = 0; i < cantidadComprada; i++) {
+                alimentosConfirmados.add(alimento);
+            }
+        }
+
+        return alimentosConfirmados;
+    }
+
+    private List<Accesorio> descontarStockAccesorios(List<Accesorio> accesorios) throws Exception {
+        List<Accesorio> accesoriosConfirmados = new ArrayList<>();
+
+        if (accesorios == null || accesorios.isEmpty()) {
+            return accesoriosConfirmados;
+        }
+
+        Map<String, Integer> cantidadesPorProducto = new LinkedHashMap<>();
+
+        for (Accesorio item : accesorios) {
+            if (item == null || item.getId() == null) {
+                continue;
+            }
+            Integer cantidadActual = cantidadesPorProducto.get(item.getId());
+            cantidadesPorProducto.put(item.getId(), cantidadActual == null ? 1 : cantidadActual + 1);
+        }
+
+        for (Map.Entry<String, Integer> entrada : cantidadesPorProducto.entrySet()) {
+            Accesorio accesorio = accesorioRepositorio.findById(entrada.getKey())
+                    .orElseThrow(() -> new Exception("Uno de los accesorios del carrito ya no existe"));
+
+            int cantidadComprada = entrada.getValue();
+            int stockActual = accesorio.getStock() == null ? 0 : accesorio.getStock();
+
+            if (!accesorio.isActivo()) {
+                throw new Exception("El accesorio " + accesorio.getNombre() + " ya no está disponible");
+            }
+
+            if (stockActual < cantidadComprada) {
+                throw new Exception("Stock insuficiente para " + accesorio.getNombre()
+                        + ". Disponible: " + stockActual + ". Solicitado: " + cantidadComprada);
+            }
+
+            accesorio.setStock(stockActual - cantidadComprada);
+            accesorioRepositorio.save(accesorio);
+
+            for (int i = 0; i < cantidadComprada; i++) {
+                accesoriosConfirmados.add(accesorio);
+            }
+        }
+
+        return accesoriosConfirmados;
+    }
+
+    private void reponerStockAlimentos(List<Alimento> alimentos) throws Exception {
+        if (alimentos == null || alimentos.isEmpty()) {
+            return;
+        }
+
+        Map<String, Integer> cantidadesPorProducto = new LinkedHashMap<>();
+
+        for (Alimento item : alimentos) {
+            if (item == null || item.getId() == null) {
+                continue;
+            }
+            Integer cantidadActual = cantidadesPorProducto.get(item.getId());
+            cantidadesPorProducto.put(item.getId(), cantidadActual == null ? 1 : cantidadActual + 1);
+        }
+
+        for (Map.Entry<String, Integer> entrada : cantidadesPorProducto.entrySet()) {
+            Alimento alimento = alimentoRepositorio.findById(entrada.getKey())
+                    .orElseThrow(() -> new Exception("No se pudo reponer stock de un alimento"));
+            int stockActual = alimento.getStock() == null ? 0 : alimento.getStock();
+            alimento.setStock(stockActual + entrada.getValue());
+            alimentoRepositorio.save(alimento);
+        }
+    }
+
+    private void reponerStockAccesorios(List<Accesorio> accesorios) throws Exception {
+        if (accesorios == null || accesorios.isEmpty()) {
+            return;
+        }
+
+        Map<String, Integer> cantidadesPorProducto = new LinkedHashMap<>();
+
+        for (Accesorio item : accesorios) {
+            if (item == null || item.getId() == null) {
+                continue;
+            }
+            Integer cantidadActual = cantidadesPorProducto.get(item.getId());
+            cantidadesPorProducto.put(item.getId(), cantidadActual == null ? 1 : cantidadActual + 1);
+        }
+
+        for (Map.Entry<String, Integer> entrada : cantidadesPorProducto.entrySet()) {
+            Accesorio accesorio = accesorioRepositorio.findById(entrada.getKey())
+                    .orElseThrow(() -> new Exception("No se pudo reponer stock de un accesorio"));
+            int stockActual = accesorio.getStock() == null ? 0 : accesorio.getStock();
+            accesorio.setStock(stockActual + entrada.getValue());
+            accesorioRepositorio.save(accesorio);
+        }
     }
 
     private void prepararComprasParaVista(List<Compra> compras) {
@@ -131,8 +290,6 @@ public class CompraServicio {
                 compra.setNotaAdmin("Pedido recibido. Revisar y coordinar entrega.");
             }
 
-            // Inicializa las listas dentro de la transacción para evitar error 500
-            // por LazyInitializationException en la vista de pedidos/envíos.
             if (compra.getAlimentos() != null) {
                 compra.getAlimentos().size();
             }
@@ -167,5 +324,9 @@ public class CompraServicio {
             }
         }
         return total;
+    }
+
+    private String localalidadSinNulo(String localidad) {
+        return localidad == null ? "" : localidad;
     }
 }
