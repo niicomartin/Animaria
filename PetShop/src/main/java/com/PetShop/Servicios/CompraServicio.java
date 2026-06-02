@@ -116,26 +116,47 @@ public class CompraServicio {
 
     @Transactional(rollbackFor = {Exception.class})
     public Compra actualizarEstado(String id, EstadoCompra estado, String notaAdmin) throws Exception {
+        if (estado == null) {
+            throw new Exception("El estado es obligatorio");
+        }
+
+        // Si el administrador elige CANCELADO desde el selector, se usa el mismo flujo
+        // que el botón de cancelar: repone stock, oculta el pedido del panel admin
+        // y deja una nota visible para el cliente en Mi cuenta.
+        if (estado == EstadoCompra.CANCELADO) {
+            return cancelarPedido(id, notaAdmin);
+        }
+
         Compra compra = buscarPorId(id);
-        if (estado == null) throw new Exception("El estado es obligatorio");
         compra.setEstado(estado);
-        compra.setNotaAdmin(notaAdmin);
+        compra.setNotaAdmin(limpiarNota(notaAdmin, "Pedido actualizado por Animaria."));
         return compraRepositorio.save(compra);
     }
 
     @Transactional(rollbackFor = {Exception.class})
-    public void eliminar(String id) throws Exception {
+    public Compra cancelarPedido(String id, String notaAdmin) throws Exception {
         Compra compra = buscarPorId(id);
 
-        // Si el administrador cancela/elimina un pedido activo, se repone el stock.
-        if (compra.getAlta() != null && compra.getAlta()) {
+        // Evita duplicar stock si alguien toca cancelar dos veces o si el pedido ya estaba cancelado.
+        boolean pedidoActivo = compra.getAlta() != null && compra.getAlta();
+        boolean yaCancelado = compra.getEstado() == EstadoCompra.CANCELADO;
+
+        if (pedidoActivo && !yaCancelado) {
             reponerStockAlimentos(compra.getAlimentos());
             reponerStockAccesorios(compra.getAccesorios());
         }
 
         compra.setAlta(false);
         compra.setEstado(EstadoCompra.CANCELADO);
-        compraRepositorio.save(compra);
+        compra.setNotaAdmin(limpiarNota(notaAdmin,
+                "Tu pedido fue cancelado por Animaria. El stock fue devuelto correctamente."));
+
+        return compraRepositorio.save(compra);
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    public void eliminar(String id) throws Exception {
+        cancelarPedido(id, "Tu pedido fue cancelado por Animaria. El stock fue devuelto correctamente.");
     }
 
     private List<Alimento> descontarStockAlimentos(List<Alimento> alimentos) throws Exception {
@@ -324,6 +345,13 @@ public class CompraServicio {
             }
         }
         return total;
+    }
+
+    private String limpiarNota(String notaAdmin, String notaPorDefecto) {
+        if (notaAdmin == null || notaAdmin.trim().isEmpty()) {
+            return notaPorDefecto;
+        }
+        return notaAdmin.trim();
     }
 
     private String localalidadSinNulo(String localidad) {

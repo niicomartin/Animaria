@@ -38,4 +38,11 @@ public class AdminPedidoControlador {
         compraServicio.actualizarEstado(id, estado, notaAdmin);
         return "redirect:/admin/pedidos";
     }
+
+    @PostMapping("/cancelar/{id}")
+    public String cancelarPedido(@PathVariable String id,
+            @RequestParam(required = false) String notaAdmin) throws Exception {
+        compraServicio.cancelarPedido(id, notaAdmin);
+        return "redirect:/admin/pedidos";
+    }
 }

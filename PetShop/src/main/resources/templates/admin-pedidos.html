@@ -67,6 +67,21 @@
                     <input type="text" name="notaAdmin" class="form-control" th:value="${c.notaAdmin}" placeholder="Ej: sale hoy 18 hs, pagó seña, llamar antes de enviar">
                     <button class="btn btn-warning text-dark fw-bold">Actualizar pedido</button>
                 </form>
+
+                <form th:if="${c.estado == null or c.estado.name() != 'CANCELADO'}"
+                      th:action="@{/admin/pedidos/cancelar/{id}(id=${c.id})}"
+                      method="POST"
+                      class="pedido-form mt-2"
+                      onsubmit="return confirm('¿Cancelar este pedido? Se devolverá el stock y el pedido dejará de aparecer como activo.');">
+                    <input type="text"
+                           name="notaAdmin"
+                           class="form-control"
+                           value="Tu pedido fue cancelado por Animaria. El stock fue devuelto correctamente."
+                           placeholder="Mensaje para el cliente">
+                    <button class="btn btn-outline-danger fw-bold" type="submit">
+                        Cancelar pedido y devolver stock
+                    </button>
+                </form>
             </article>
 
             <div th:if="${#lists.isEmpty(compras)}" class="alert alert-dark rounded-4 text-center">
